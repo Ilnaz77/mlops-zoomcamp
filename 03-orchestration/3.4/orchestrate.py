@@ -35,8 +35,8 @@ def add_features(
     df_train: pd.DataFrame, df_val: pd.DataFrame
 ) -> tuple(
     [
-        scipy.sparse._csr.csr_matrix,
-        scipy.sparse._csr.csr_matrix,
+        scipy.sparse.csr_matrix,
+        scipy.sparse.csr_matrix,
         np.ndarray,
         np.ndarray,
         sklearn.feature_extraction.DictVectorizer,
@@ -64,8 +64,8 @@ def add_features(
 
 @task(log_prints=True)
 def train_best_model(
-    X_train: scipy.sparse._csr.csr_matrix,
-    X_val: scipy.sparse._csr.csr_matrix,
+    X_train: scipy.sparse.csr_matrix,
+    X_val: scipy.sparse.csr_matrix,
     y_train: np.ndarray,
     y_val: np.ndarray,
     dv: sklearn.feature_extraction.DictVectorizer,
@@ -111,8 +111,8 @@ def train_best_model(
 
 @flow
 def main_flow(
-    train_path: str = "./data/green_tripdata_2021-01.parquet",
-    val_path: str = "./data/green_tripdata_2021-02.parquet",
+        train_path: str = "/home/isalimov/study/mlops-zoomcamp/02-experiment-tracking/homework/data/green_tripdata_2022-01.parquet",
+        val_path: str = "/home/isalimov/study/mlops-zoomcamp/02-experiment-tracking/homework/data/green_tripdata_2022-02.parquet",
 ) -> None:
     """The main training pipeline"""
 

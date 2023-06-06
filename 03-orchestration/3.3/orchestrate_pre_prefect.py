@@ -30,11 +30,11 @@ def read_data(filename: str) -> pd.DataFrame:
 
 
 def add_features(
-    df_train: pd.DataFrame, df_val: pd.DataFrame
+        df_train: pd.DataFrame, df_val: pd.DataFrame
 ) -> tuple(
     [
-        scipy.sparse._csr.csr_matrix,
-        scipy.sparse._csr.csr_matrix,
+        scipy.sparse.csr_matrix,
+        scipy.sparse.csr_matrix,
         np.ndarray,
         np.ndarray,
         sklearn.feature_extraction.DictVectorizer,
@@ -44,7 +44,7 @@ def add_features(
     df_train["PU_DO"] = df_train["PULocationID"] + "_" + df_train["DOLocationID"]
     df_val["PU_DO"] = df_val["PULocationID"] + "_" + df_val["DOLocationID"]
 
-    categorical = ["PU_DO"]  #'PULocationID', 'DOLocationID']
+    categorical = ["PU_DO"]  # 'PULocationID', 'DOLocationID']
     numerical = ["trip_distance"]
 
     dv = DictVectorizer()
@@ -61,11 +61,11 @@ def add_features(
 
 
 def train_best_model(
-    X_train: scipy.sparse._csr.csr_matrix,
-    X_val: scipy.sparse._csr.csr_matrix,
-    y_train: np.ndarray,
-    y_val: np.ndarray,
-    dv: sklearn.feature_extraction.DictVectorizer,
+        X_train: scipy.sparse.csr_matrix,
+        X_val: scipy.sparse.csr_matrix,
+        y_train: np.ndarray,
+        y_val: np.ndarray,
+        dv: sklearn.feature_extraction.DictVectorizer,
 ) -> None:
     """train a model with best hyperparams and write everything out"""
 
@@ -103,12 +103,13 @@ def train_best_model(
         mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
 
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
+
     return None
 
 
 def main_flow(
-    train_path: str = "./data/green_tripdata_2021-01.parquet",
-    val_path: str = "./data/green_tripdata_2021-02.parquet",
+        train_path: str = "/home/isalimov/study/mlops-zoomcamp/02-experiment-tracking/homework/data/green_tripdata_2022-01.parquet",
+        val_path: str = "/home/isalimov/study/mlops-zoomcamp/02-experiment-tracking/homework/data/green_tripdata_2022-02.parquet",
 ) -> None:
     """The main training pipeline"""
 
