@@ -1,7 +1,7 @@
 from prefect_email import EmailServerCredentials
 
 credentials = EmailServerCredentials(
-    username="sali****",
+    username="s*li***",
     password="******",  # must be an app password
 
 )
