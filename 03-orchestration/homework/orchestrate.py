@@ -146,7 +146,11 @@ def main_flow_hw(
     df_train = read_data(train_path)
     df_val = read_data(val_path)
 
-    email_send_message("salimovilnaz777@gmail.com", "Data has read successfully!", email_credentials_block)
+    email_send_message(subject=f"Flow run failed",
+                        msg=f"Flow run failed due to it.",
+                        email_to=email_credentials_block.username,
+                        email_server_credentials=email_credentials_block,)
+
 
     # Transform
     X_train, X_val, y_train, y_val, dv = add_features(df_train, df_val)
