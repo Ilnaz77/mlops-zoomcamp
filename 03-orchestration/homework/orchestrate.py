@@ -16,11 +16,6 @@ from prefect_email import EmailServerCredentials, email_send_message
 email_credentials_block = EmailServerCredentials.load("mail")
 
 
-@task
-def send_msg():
-    email_send_message("salimovilnaz777@gmail.com", "Data has read successfully!", email_credentials_block)
-
-
 @task(retries=3, retry_delay_seconds=2, name="Read taxi data")
 def read_data(filename: str) -> pd.DataFrame:
     """Read data into DataFrame"""
@@ -151,7 +146,7 @@ def main_flow_hw(
     df_train = read_data(train_path)
     df_val = read_data(val_path)
 
-    send_msg()
+    email_send_message("salimovilnaz777@gmail.com", "Data has read successfully!", email_credentials_block)
 
     # Transform
     X_train, X_val, y_train, y_val, dv = add_features(df_train, df_val)
