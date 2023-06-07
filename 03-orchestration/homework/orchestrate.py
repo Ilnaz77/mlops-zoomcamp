@@ -11,6 +11,10 @@ import xgboost as xgb
 from prefect import flow, task
 from prefect.artifacts import create_markdown_artifact
 from datetime import date
+from prefect_email import EmailServerCredentials, email_send_message
+
+email_credentials_block = EmailServerCredentials.load("mail")
+
 
 @task(retries=3, retry_delay_seconds=2, name="Read taxi data")
 def read_data(filename: str) -> pd.DataFrame:
@@ -27,6 +31,8 @@ def read_data(filename: str) -> pd.DataFrame:
 
     categorical = ["PULocationID", "DOLocationID"]
     df[categorical] = df[categorical].astype(str)
+
+    email_send_message("salimovilnaz777@gmail.com", "Data has read successfully!", email_credentials_block)
 
     return df
 
