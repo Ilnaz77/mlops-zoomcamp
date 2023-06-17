@@ -2,13 +2,19 @@ import os
 import pickle
 
 import mlflow
+from mlflow.tracking import MlflowClient
 from flask import Flask, request, jsonify
 
+os.environ["AWS_ACCESS_KEY_ID"] = "YCAJEZ8oYIJdSI_4eRuAt5UQq"
+os.environ["AWS_SECRET_ACCESS_KEY"] = "YCPUfjxRS1nLsNVBI-x2VfAEH6RUUO5leO5ijGt6"
+os.environ["MLFLOW_S3_ENDPOINT_URL"] = "https://storage.yandexcloud.net"
 
-RUN_ID = os.getenv('RUN_ID')
+# RUN_ID = os.getenv('RUN_ID')  # можно сделать как переменную окружения
+RUN_ID = "9fb826dfc09648f896d6771468f6015e"
 
-logged_model = f's3://mlflow-models-alexey/1/{RUN_ID}/artifacts/model'
-# logged_model = f'runs:/{RUN_ID}/model'
+mlflow.set_tracking_uri("http://158.160.110.3:5000")
+logged_model = f'runs:/{RUN_ID}/model'
+# logged_model = f's3://zoomcamp-mlops/web_services/3/{RUN_ID}/artifacts/model'  # тогда не нужен set_tracking_uri
 model = mlflow.pyfunc.load_model(logged_model)
 
 
