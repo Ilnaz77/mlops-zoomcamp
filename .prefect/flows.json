@@ -1,0 +1,4 @@
+{
+  "main-flow": "03-orchestration/3.4/orchestrate.py:main_flow",
+  "main-flow-hw": "03-orchestration/homework/orchestrate.py:main_flow_hw"
+}
