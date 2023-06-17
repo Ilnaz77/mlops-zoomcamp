@@ -120,7 +120,7 @@ The hosted Prefect Cloud lets you avoid running your own Prefect server and
 has automations that allow you to get notifications when certain events occur
 or don’t occur. 
 
-Create a free forever Prefect Cloud account at app.prefect.cloud and connect
+Create a free forever Prefect Cloud account at [app.prefect.cloud](https://app.prefect.cloud/) and connect
 your workspace to it following the steps in the UI when you sign up. 
 
 Set up an Automation from the UI that will send yourself an email when
@@ -140,13 +140,13 @@ What is the name of the second step in the Automation creation process?
 
 ## Submit the results
 
-* Submit your results here: TBA
+* Submit your results here: https://forms.gle/nVSYH5fGGamdY1LaA
 * You can submit your solution multiple times. In this case, only the last submission will be used
 * If your answer doesn't match options exactly, select the closest one
 
 
 ## Deadline
 
-The deadline for submitting is TBA, 23:00 CEST (Berlin time). 
+The deadline for submitting is 12 June (Monday), 23:00 CEST (Berlin time). 
 
 After that, the form will be closed.
