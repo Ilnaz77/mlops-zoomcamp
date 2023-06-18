@@ -7,7 +7,7 @@ import mlflow
 
 kinesis_client = boto3.client('kinesis')
 
-PREDICTIONS_STREAM_NAME = os.getenv('PREDICTIONS_STREAM_NAME', 'ride_predictions')
+PREDICTIONS_STREAM_NAME = os.getenv('PREDICTIONS_STREAM_NAME', 'output-get-mlops-zoomcamp-stream')
 
 
 RUN_ID = os.getenv('RUN_ID')

@@ -9,17 +9,18 @@
 
 Links
 
+# https://console.cloud.yandex.ru/folders/b1gvke4gj1s7r1gtujb7/data-streams/streams
+
 * [Tutorial: Using Amazon Lambda with Amazon Kinesis](https://docs.amazonaws.cn/en_us/lambda/latest/dg/with-kinesis-example.html)
 
 ## Code snippets
 
 ### Sending data
 
-
 ```bash
-KINESIS_STREAM_INPUT=ride_events
-aws kinesis put-record \
-    --stream-name ${KINESIS_STREAM_INPUT} \
+KINESIS_STREAM_INPUT=ru-central1/b1gfe9noiorfsvs06hgu/etnqhldvb6j1qqjt6nol/mlops-zoomcamp-stream
+aws kinesis --endpoint https://yds.serverless.yandexcloud.net put-record \
+    --stream-name /ru-central1/b1gfe9noiorfsvs06hgu/etnqhldvb6j1qqjt6nol/mlops-zoomcamp-stream \
     --partition-key 1 \
     --data "Hello, this is a test."
 ```
@@ -44,10 +45,11 @@ Record example
 ```
 
 Sending this record
+Read for ycl: https://cloud.yandex.ru/docs/data-streams/operations/aws-cli/send
 
 ```bash
-aws kinesis put-record \
-    --stream-name ${KINESIS_STREAM_INPUT} \
+aws kinesis --endpoint https://yds.serverless.yandexcloud.net put-record \
+    --stream-name /ru-central1/b1gfe9noiorfsvs06hgu/etnqhldvb6j1qqjt6nol/mlops-zoomcamp-stream \
     --partition-key 1 \
     --data '{
         "ride": {
@@ -86,6 +88,7 @@ aws kinesis put-record \
 ```
 
 ### Reading from the stream
+Read for ycl: https://cloud.yandex.ru/docs/data-streams/operations/aws-cli/get-records
 
 ```bash
 KINESIS_STREAM_OUTPUT='ride_predictions'
@@ -164,6 +167,9 @@ docker run -it --rm \
 ```
 
 ### Publishing Docker images
+Запихнуть лямбду функцию в контейнер и запускать их когда приходят данные в поток.
+Ycl serverless container: https://cloud.yandex.ru/docs/serverless-containers/quickstart/container
+Ycl docker hun: https://cloud.yandex.ru/docs/container-registry/operations/docker-image/docker-image-push
 
 Creating an ECR repo
 
