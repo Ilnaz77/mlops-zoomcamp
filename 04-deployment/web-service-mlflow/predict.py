@@ -5,8 +5,8 @@ import mlflow
 from mlflow.tracking import MlflowClient
 from flask import Flask, request, jsonify
 
-os.environ["AWS_ACCESS_KEY_ID"] = "YCAJEZ8oYIJdSI_4eRuAt5UQq"
-os.environ["AWS_SECRET_ACCESS_KEY"] = "YCPUfjxRS1nLsNVBI-x2VfAEH6RUUO5leO5ijGt6"
+os.environ["AWS_ACCESS_KEY_ID"] = ""
+os.environ["AWS_SECRET_ACCESS_KEY"] = ""
 os.environ["MLFLOW_S3_ENDPOINT_URL"] = "https://storage.yandexcloud.net"
 
 # RUN_ID = os.getenv('RUN_ID')  # можно сделать как переменную окружения
