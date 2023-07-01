@@ -55,7 +55,7 @@ report = Report(metrics=[
 )
 
 
-@task(retries=1, retry_delay_seconds=5, name="db preparation")
+@task(retries=2, retry_delay_seconds=5, name="db preparation")
 def prep_db():
     with psycopg.connect("host=localhost port=5431 user=postgres password=example", autocommit=True) as conn:
         res = conn.execute("SELECT 1 FROM pg_database WHERE datname='test'")
@@ -65,7 +65,7 @@ def prep_db():
             conn.execute(create_table_statement)
 
 
-@task(retries=1, retry_delay_seconds=5, name="calculate metrics")
+@task(retries=2, retry_delay_seconds=5, name="calculate metrics")
 def calculate_metrics_postgresql(curr, i):
     current_data = raw_data[(raw_data.lpep_pickup_datetime >= (begin + datetime.timedelta(i))) &
                             (raw_data.lpep_pickup_datetime < (begin + datetime.timedelta(i + 1)))]
@@ -95,7 +95,7 @@ def calculate_metrics_postgresql(curr, i):
     return current_quantile
 
 
-@flow(retries=0, name="batch_monitoring_backfill")
+@flow(retries=2, name="batch_monitoring_backfill")
 def batch_monitoring_backfill():
     list_of_q = []
     prep_db()
