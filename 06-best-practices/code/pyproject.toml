@@ -6,11 +6,12 @@ disable = [
     "missing-class-docstring",
     "missing-module-docstring",
     "invalid-name",
-    "too-few-public-methods"
+    "too-few-public-methods",
+    "line-too-long",
 ]
 
 [tool.black]
-line-length = 88
+line-length = 50
 target-version = ['py39']
 skip-string-normalization = true
 

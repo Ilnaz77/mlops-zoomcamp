@@ -9,10 +9,19 @@ docker build -t stream-model-duration:v2 .
 ```bash
 docker run -it --rm \
     -p 8080:8080 \
-    -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="e1efc53e9bd149078b0c12aeaa6365df" \
+    -e MODEL_BUCKET="zoomcamp-mlops" \
+    -e MLFLOW_EXPERIMENT_ID="4" \
+    -e RUN_ID="f8fd04f838554ea8b14d8d264090ecd3" \
+    -e KINESIS_PREDICTIONS_STREAM_NAME="best-practices-06-stream-output" \
+    -e KINESIS_REGION_NAME="ru-central1" \
+    -e KINESIS_ENDPOINT_URL="https://yds.serverless.yandexcloud.net" \
+    -e KINESIS_PREDICTIONS_CLOUD_NAME="b1gfe9noiorfsvs06hgu" \
+    -e KINESIS_PREDICTIONS_DB_NAME="etnqhldvb6j1qqjt6nol" \
+    -e AWS_SECRET_ACCESS_KEY="YCPUfjxRS1nLsNVBI-x2VfAEH6RUUO5leO5ijGt6" \
+    -e AWS_ACCESS_KEY_ID="YCAJEZ8oYIJdSI_4eRuAt5UQq" \
+    -e TRACKING_SERVER_HOST="158.160.110.3" \
+    -e MLFLOW_S3_ENDPOINT_URL=https://storage.yandexcloud.net \
     -e TEST_RUN="True" \
-    -e AWS_DEFAULT_REGION="eu-west-1" \
     stream-model-duration:v2
 ```
 
@@ -44,13 +53,19 @@ aws --endpoint-url=http://localhost:4566 \
     --shard-count 1
 ```
 
+#### Дернуть данные из стрима (после отработки докера)
 ```bash
 aws  --endpoint-url=http://localhost:4566 \
     kinesis     get-shard-iterator \
-    --shard-id ${SHARD} \
+    --shard-id 'shardId-000000000000' \
     --shard-iterator-type TRIM_HORIZON \
-    --stream-name ${PREDICTIONS_STREAM_NAME} \
+    --stream-name 'ride_predictions' \
     --query 'ShardIterator'
+```
+
+```bash
+RESULT=$(aws --endpoint-url=http://localhost:4566 kinesis get-records --shard-iterator $SHARD_ITERATOR)
+echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode
 ```
 
 ### Unable to locate credentials
@@ -82,7 +97,7 @@ make test
 ```
 
 
-To prepare the project, run 
+To prepare the project, run
 
 ```bash
 make setup
@@ -101,7 +116,7 @@ w/ Terraform
 
 **Configuration**:
 
-1. If you've already created an AWS account, head to the IAM section, generate your secret-key, and download it locally. 
+1. If you've already created an AWS account, head to the IAM section, generate your secret-key, and download it locally.
 [Instructions](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html)
 
 2. [Configure]((https://docs.aws.amazon.com/cli/latest/userguide/getting-started-quickstart.html)) `aws-cli` with your downloaded AWS secret keys:
@@ -118,7 +133,7 @@ w/ Terraform
         $ aws sts get-caller-identity
       ```
 
-4. (Optional) Configuring with `aws profile`: [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sourcing-external.html) and [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#using-an-external-credentials-process) 
+4. (Optional) Configuring with `aws profile`: [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sourcing-external.html) and [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#using-an-external-credentials-process)
 
 <br>
 
@@ -147,7 +162,7 @@ w/ Terraform
 3. To test the pipeline end-to-end with our new cloud infra:
     ```
     . ./scripts/test_cloud_e2e.sh
-    ``` 
+    ```
 
 4. And then check on CloudWatch logs. Or try `get-records` on the `output_kinesis_stream` (refer to `integration_test`)
 
@@ -170,4 +185,3 @@ w/ Terraform
 
 * Unfortunately, the `RUN_ID` (if set via the `ENV` or `ARG` in `Dockerfile`), disappears during lambda invocation.
 We'll set it via `aws lambda update-function-configuration` CLI command (refer to `deploy_manual.sh` or `.github/workflows/cd-deploy.yml`)
-    

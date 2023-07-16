@@ -1,19 +1,26 @@
 from pathlib import Path
 
 import model
+from lambda_function import lambda_handler
 
 
 def read_text(file):
     test_directory = Path(__file__).parent
 
-    with open(test_directory / file, 'rt', encoding='utf-8') as f_in:
+    with open(
+        test_directory / file,
+        'rt',
+        encoding='utf-8',
+    ) as f_in:
         return f_in.read().strip()
 
 
 def test_base64_decode():
     base64_input = read_text('data.b64')
 
-    actual_result = model.base64_decode(base64_input)
+    actual_result = model.base64_decode(
+        base64_input
+    )
     expected_result = {
         "ride": {
             "PULocationID": 130,
@@ -35,7 +42,9 @@ def test_prepare_features():
         "trip_distance": 3.66,
     }
 
-    actual_features = model_service.prepare_features(ride)
+    actual_features = (
+        model_service.prepare_features(ride)
+    )
 
     expected_fetures = {
         "PU_DO": "130_205",
@@ -63,16 +72,22 @@ def test_predict():
         "trip_distance": 3.66,
     }
 
-    actual_prediction = model_service.predict(features)
+    actual_prediction = model_service.predict(
+        features
+    )
     expected_prediction = 10.0
 
-    assert actual_prediction == expected_prediction
+    assert (
+        actual_prediction == expected_prediction
+    )
 
 
 def test_lambda_handler():
     model_mock = ModelMock(10.0)
     model_version = 'Test123'
-    model_service = model.ModelService(model_mock, model_version)
+    model_service = model.ModelService(
+        model_mock, model_version
+    )
 
     base64_input = read_text('data.b64')
 
@@ -86,7 +101,9 @@ def test_lambda_handler():
         ]
     }
 
-    actual_predictions = model_service.lambda_handler(event)
+    actual_predictions = (
+        model_service.lambda_handler(event)
+    )
     expected_predictions = {
         'predictions': [
             {
@@ -100,4 +117,38 @@ def test_lambda_handler():
         ]
     }
 
-    assert actual_predictions == expected_predictions
+    assert (
+        actual_predictions == expected_predictions
+    )
+
+
+def test_lambda_handler_with_callback():
+    import os
+
+    PREDICTIONS_STREAM_NAME = os.getenv(
+        'KINESIS_PREDICTIONS_STREAM_NAME'
+    )
+    RUN_ID = os.getenv('RUN_ID')
+    TEST_RUN = (
+        os.getenv('TEST_RUN', 'False') == 'True'
+    )
+
+    model_service = model.init(
+        prediction_stream_name=PREDICTIONS_STREAM_NAME,
+        run_id=RUN_ID,
+        test_run=TEST_RUN,
+    )
+
+    base64_input = read_text('data.b64')
+
+    event = {
+        "Records": [
+            {
+                "kinesis": {
+                    "data": base64_input,
+                },
+            }
+        ]
+    }
+
+    model_service.lambda_handler(event)

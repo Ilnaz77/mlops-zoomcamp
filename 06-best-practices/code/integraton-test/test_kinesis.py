@@ -7,20 +7,29 @@ from pprint import pprint
 import boto3
 from deepdiff import DeepDiff
 
-kinesis_endpoint = "http://localhost:4566" # os.getenv('KINESIS_ENDPOINT_URL', "http://localhost:4566")
-kinesis_client = boto3.client('kinesis', endpoint_url=kinesis_endpoint)
+kinesis_endpoint = "http://localhost:4566"  # os.getenv('KINESIS_ENDPOINT_URL', "http://localhost:4566")
+kinesis_client = boto3.client(
+    'kinesis', endpoint_url=kinesis_endpoint
+)
 
-stream_name = os.getenv('KINESIS_PREDICTIONS_STREAM_NAME', 'ride_predictions')
+stream_name = os.getenv(
+    'KINESIS_PREDICTIONS_STREAM_NAME',
+    'ride_predictions',
+)
 shard_id = 'shardId-000000000000'
 
 
-shard_iterator_response = kinesis_client.get_shard_iterator(
-    StreamName=stream_name,
-    ShardId=shard_id,
-    ShardIteratorType='TRIM_HORIZON',
+shard_iterator_response = (
+    kinesis_client.get_shard_iterator(
+        StreamName=stream_name,
+        ShardId=shard_id,
+        ShardIteratorType='TRIM_HORIZON',
+    )
 )
 
-shard_iterator_id = shard_iterator_response['ShardIterator']
+shard_iterator_id = shard_iterator_response[
+    'ShardIterator'
+]
 
 
 records_response = kinesis_client.get_records(
@@ -48,7 +57,11 @@ expected_record = {
     },
 }
 
-diff = DeepDiff(actual_record, expected_record, significant_digits=1)
+diff = DeepDiff(
+    actual_record,
+    expected_record,
+    significant_digits=1,
+)
 print(f'diff={diff}')
 
 assert 'values_changed' not in diff
