@@ -13,15 +13,15 @@ else
     echo "no need to build image ${LOCAL_IMAGE_NAME}"
 fi
 
-export PREDICTIONS_STREAM_NAME="ride_predictions"
+export KINESIS_PREDICTIONS_STREAM_NAME="ride_predictions"
 
 docker-compose up -d
 
-sleep 5
+sleep 1
 
 aws --endpoint-url=http://localhost:4566 \
     kinesis create-stream \
-    --stream-name ${PREDICTIONS_STREAM_NAME} \
+    --stream-name ${KINESIS_PREDICTIONS_STREAM_NAME} \
     --shard-count 1
 
 pipenv run python test_docker.py
