@@ -7,8 +7,6 @@ from datetime import datetime
 import batch
 import pandas as pd
 
-os.environ["S3_ENDPOINT_URL"] = "http://localhost:4566"
-
 
 def dt(hour, minute, second=0):
     return datetime(2022, 1, 1, hour, minute, second)
